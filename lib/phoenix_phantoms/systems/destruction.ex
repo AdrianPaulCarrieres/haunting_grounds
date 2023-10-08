@@ -41,16 +41,21 @@ defmodule PhoenixPhantoms.Systems.Destruction do
   defp award_points(ghost) do
     AttackedBy.get_all()
     |> Enum.filter(fn {g, _player} -> g == ghost end)
-    |> Enum.each(fn {_g, player} ->
+    |> Enum.each(fn {g, player} ->
       s = Score.get(player) + 5
       Score.update(player, s)
+
+      AttackedBy.remove(g)
     end)
 
     KilledBy.get_all()
     |> Enum.filter(fn {g, _player} -> g == ghost end)
-    |> Enum.each(fn {_g, player} ->
+    |> Enum.each(fn {g, player} ->
       s = Score.get(player) + 10
       Score.update(player, s)
+
+      KilledBy.remove(g)
     end)
+
   end
 end
