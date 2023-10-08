@@ -4,6 +4,9 @@ defmodule PhoenixPhantoms.Systems.Destruction do
   """
   @behaviour ECSx.System
 
+  alias PhoenixPhantoms.Components.KilledBy
+  alias PhoenixPhantoms.Components.Score
+  alias PhoenixPhantoms.Components.AttackedBy
   alias PhoenixPhantoms.Components
 
   alias Components.DestroyedAt
@@ -20,6 +23,7 @@ defmodule PhoenixPhantoms.Systems.Destruction do
     Enum.each(ghosts, fn {ghost, hp} ->
       if hp <= 0 do
         destroy(ghost)
+        award_points(ghost)
       end
     end)
   end
@@ -32,5 +36,21 @@ defmodule PhoenixPhantoms.Systems.Destruction do
     YVelocity.remove(ghost)
 
     DestroyedAt.add(ghost, DateTime.utc_now())
+  end
+
+  defp award_points(ghost) do
+    AttackedBy.get_all()
+    |> Enum.filter(fn {g, _player} -> g == ghost end)
+    |> Enum.each(fn {_g, player} ->
+      s = Score.get(player) + 5
+      Score.update(player, s)
+    end)
+
+    KilledBy.get_all()
+    |> Enum.filter(fn {g, _player} -> g == ghost end)
+    |> Enum.each(fn {_g, player} ->
+      s = Score.get(player) + 10
+      Score.update(player, s)
+    end)
   end
 end
