@@ -4,12 +4,16 @@ Hello there
     Loading...
   <% else %>
     <div id="scores">
-      Scores:<br />
-      <%= for {name, color, score} <- @scores, score != 0 do %>
-        <span style={"background-color: #{color};"} class="ml-1 text-sm text-white">
+      Scores: <br />
+      <ul>
+        <%= for {name, color, score} <- @scores, score != 0 do %>
+          <li>
+            <span style={"background-color: #{color};"} class="ml-1 text-sm text-white">
           <%= name %>
           </span>: <%= score %>
-      <% end %>
+          </li>
+        <% end %>
+      </ul>
     </div>
     <div id="ghosts" phx-hook="">
       <%= for {g, x, y} <- @ghosts do %>
