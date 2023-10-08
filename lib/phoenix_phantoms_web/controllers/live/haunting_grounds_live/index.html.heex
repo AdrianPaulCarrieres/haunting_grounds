@@ -1,0 +1,12 @@
+Hello there
+<div id="div" phx-hook="">
+  <%= if @loading do %>
+    Loading...
+  <% else %>
+    <div id="ghosts" phx-hook="">
+      <%= for {g, x, y} <- @ghosts do %>
+        <.ghost on_click="ghost_click" id={g} x={x} y={y} float_speed={1} />
+      <% end %>
+    </div>
+  <% end %>
+</div>
