@@ -30,9 +30,12 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
   end
 
   defp deal_damage(target) do
-    hp = HealthPoints.get(target) - 1
-
-    HealthPoints.update(target, hp)
+    case HealthPoints.get(target, :already_dead) do
+      :already_dead ->
+        :ok
+      hp ->
+        HealthPoints.update(target, hp - 1)
+    end
   end
 
   defp add_cooldown(self) do
