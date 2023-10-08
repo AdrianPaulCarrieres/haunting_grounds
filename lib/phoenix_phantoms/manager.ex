@@ -41,6 +41,8 @@ defmodule PhoenixPhantoms.Manager do
   # Declare all valid Component types
   def components do
     [
+      PhoenixPhantoms.Components.PlayerName,
+      PhoenixPhantoms.Components.PlayerColor,
       PhoenixPhantoms.Components.AttackedBy,
       PhoenixPhantoms.Components.KilledBy,
       PhoenixPhantoms.Components.Score,

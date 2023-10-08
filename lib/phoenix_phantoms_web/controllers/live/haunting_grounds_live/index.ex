@@ -1,4 +1,6 @@
 defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
+  alias PhoenixPhantoms.Components.PlayerName
+  alias PhoenixPhantoms.Components.PlayerColor
   use PhoenixPhantomsWeb, :live_view
 
   import PhoenixPhantomsWeb.SpookyComponents
@@ -27,8 +29,10 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
 
     socket =
       if connected?(socket) do
-        ECSx.ClientEvents.add(player_id, :spawn_player)
-        send(self(), :first_load)
+        {name, color} = player_identity()
+        ECSx.ClientEvents.add(player_id, {:spawn_player, name, color})
+        # TODO FIX PLAYER PRESENCE START UP
+        Process.send_after(self(), :first_load, 500)
         socket
       else
         socket
@@ -120,26 +124,28 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
 
   defp assign_scores(socket) do
     scores =
-      Presence.list(@presence)
-      |> Enum.map(fn {_, data} -> data[:metas] |> List.first() end)
-      |> Enum.map(fn p ->
-        {p.name, p.color, Score.get(p.player_entity, 0)}
+      Score.get_all()
+      |> Enum.sort_by(fn {_p, s} -> s end, :desc)
+      |> Enum.map(fn {entity, score} ->
+        player_name = PlayerName.get(entity)
+        player_color = PlayerColor.get(entity)
+
+        {player_name, player_color, score}
       end)
-      |> Enum.sort_by(fn {_, _, s} -> s end, :desc)
 
     assign(socket, :scores, scores)
   end
 
   defp join_presence(socket) do
-    {name, color} = player_identity()
+    player_entity = socket.assigns.player_entity
 
     {:ok, _} =
       Presence.track(self(), @presence, socket.id, %{
         joined_at: :os.system_time(:seconds),
         x: 50,
         y: 50,
-        name: name,
-        color: color,
+        name: PlayerName.get(player_entity),
+        color: PlayerColor.get(player_entity),
         id: socket.id,
         player_entity: socket.assigns.player_entity
       })
@@ -151,7 +157,6 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
       |> Enum.map(fn {_, data} -> data[:metas] |> List.first() end)
 
     socket
-    |> assign(:color, color)
     |> assign(:users, initial_users)
     |> assign(:x, 50)
     |> assign(:y, 50)

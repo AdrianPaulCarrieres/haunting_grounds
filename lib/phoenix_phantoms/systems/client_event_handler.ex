@@ -4,6 +4,8 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
   """
   @behaviour ECSx.System
 
+  alias PhoenixPhantoms.Components.PlayerColor
+  alias PhoenixPhantoms.Components.PlayerName
   alias PhoenixPhantoms.Components.AttackedBy
   alias PhoenixPhantoms.Components
   alias Components.AttackCooldown
@@ -19,9 +21,12 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
     Enum.each(client_events, &process_one/1)
   end
 
-  defp process_one({player, :spawn_player}) do
-    AttackSpeed.add(player, 1.2)
+  defp process_one({player, {:spawn_player, name, color}}) do
     Score.add(player, 0)
+    PlayerName.add(player, name)
+    PlayerColor.add(player, color)
+
+    AttackSpeed.add(player, 1.2)
   end
 
   defp process_one({player, {:shoot, ghost}}) do
@@ -38,7 +43,7 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
       :already_dead ->
         :ok
 
-      hp when hp >= 1 ->
+      hp when hp - 1 >= 1 ->
         AttackedBy.add(ghost, player)
         HealthPoints.update(ghost, hp - 1)
 
