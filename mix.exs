@@ -55,7 +55,11 @@ defmodule PhoenixPhantoms.MixProject do
       {:ecsx, "~> 0.5"},
 
       # Linter
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+
+      # Reporting
+      {:sentry, "~> 8.0"},
+      {:hackney, "~> 1.8"}
     ]
   end
 
