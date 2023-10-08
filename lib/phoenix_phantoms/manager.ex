@@ -27,7 +27,7 @@ defmodule PhoenixPhantoms.Manager do
       # First generate a unique ID to represent the new entity
       entity = Ecto.UUID.generate()
 
-      # Then use that ID to create the components which make up a ghost    
+      # Then use that ID to create the components which make up a ghost
       XPosition.add(entity, Enum.random(0..1000))
       YPosition.add(entity, Enum.random(0..1000))
 

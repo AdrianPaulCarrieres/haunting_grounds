@@ -33,6 +33,7 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
     case HealthPoints.get(target, :already_dead) do
       :already_dead ->
         :ok
+
       hp ->
         HealthPoints.update(target, hp - 1)
     end
