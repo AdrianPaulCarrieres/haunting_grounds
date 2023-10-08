@@ -56,6 +56,5 @@ defmodule PhoenixPhantoms.Systems.Destruction do
 
       KilledBy.remove(g)
     end)
-
   end
 end

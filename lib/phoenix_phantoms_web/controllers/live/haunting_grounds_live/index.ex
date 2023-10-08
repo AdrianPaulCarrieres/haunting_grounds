@@ -7,6 +7,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   alias Components.HealthPoints
   alias Components.XPosition
   alias Components.YPosition
+  alias Components.Score
 
   alias PhoenixPhantoms.PubSub
   alias PhoenixPhantomsWeb.Presence
@@ -28,7 +29,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
       if connected?(socket) do
         ECSx.ClientEvents.add(player_id, :spawn_player)
         send(self(), :first_load)
-        join_presence(socket)
+        socket
       else
         socket
       end
@@ -38,7 +39,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
 
   defp assign_loading_state(socket) do
     assign(socket,
-      loading: true
+      loading: true,
+      scores: []
     )
   end
 
@@ -46,7 +48,9 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   def handle_info(:first_load, socket) do
     socket =
       socket
+      |> join_presence()
       |> assign_ghosts()
+      |> assign_scores()
       |> assign(loading: false)
 
     :timer.send_interval(50, :refresh)
@@ -59,6 +63,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     socket =
       socket
       |> assign_ghosts()
+      |> assign_scores()
 
     {:noreply, socket}
   end
@@ -113,6 +118,18 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     end
   end
 
+  defp assign_scores(socket) do
+    scores =
+      Presence.list(@presence)
+      |> Enum.map(fn {_, data} -> data[:metas] |> List.first() end)
+      |> Enum.map(fn p ->
+        {p.name, p.color, Score.get(p.player_entity, 0)}
+      end)
+      |> Enum.sort_by(fn {_, _, s} -> s end, :desc)
+
+    assign(socket, :scores, scores)
+  end
+
   defp join_presence(socket) do
     {name, color} = player_identity()
 
@@ -123,7 +140,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
         y: 50,
         name: name,
         color: color,
-        id: socket.id
+        id: socket.id,
+        player_entity: socket.assigns.player_entity
       })
 
     Phoenix.PubSub.subscribe(PubSub, @presence)

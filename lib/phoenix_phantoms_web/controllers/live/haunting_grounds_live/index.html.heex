@@ -3,6 +3,14 @@ Hello there
   <%= if @loading do %>
     Loading...
   <% else %>
+    <div id="scores">
+      Scores:<br />
+      <%= for {name, color, score} <- @scores, score != 0 do %>
+        <span style={"background-color: #{color};"} class="ml-1 text-sm text-white">
+          <%= name %>
+          </span>: <%= score %>
+      <% end %>
+    </div>
     <div id="ghosts" phx-hook="">
       <%= for {g, x, y} <- @ghosts do %>
         <.ghost on_click="ghost_click" id={g} x={x} y={y} float_speed={1} />
