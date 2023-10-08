@@ -31,9 +31,12 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
       if connected?(socket) do
         {name, color} = player_identity()
         ECSx.ClientEvents.add(player_id, {:spawn_player, name, color})
-        # TODO FIX PLAYER PRESENCE START UP
-        Process.send_after(self(), :first_load, 500)
+
+        send(self(), :first_load)
+
         socket
+        |> assign(:name, name)
+        |> assign(:color, color)
       else
         socket
       end
@@ -138,16 +141,18 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
 
   defp join_presence(socket) do
     player_entity = socket.assigns.player_entity
+    name = socket.assigns.name
+    color = socket.assigns.color
 
     {:ok, _} =
       Presence.track(self(), @presence, socket.id, %{
         joined_at: :os.system_time(:seconds),
         x: 50,
         y: 50,
-        name: PlayerName.get(player_entity),
-        color: PlayerColor.get(player_entity),
+        name: name,
+        color: color,
         id: socket.id,
-        player_entity: socket.assigns.player_entity
+        player_entity: player_entity
       })
 
     Phoenix.PubSub.subscribe(PubSub, @presence)
