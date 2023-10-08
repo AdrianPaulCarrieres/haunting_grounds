@@ -6,12 +6,12 @@ defmodule PhoenixPhantoms.Systems.Destruction do
 
   alias PhoenixPhantoms.Components
 
+  alias Components.DestroyedAt
   alias Components.HealthPoints
   alias Components.XPosition
   alias Components.XVelocity
   alias Components.YPosition
   alias Components.YVelocity
-  alias Components.DestroyedAt
 
   @impl ECSx.System
   def run do

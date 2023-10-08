@@ -16,6 +16,8 @@ defmodule PhoenixPhantoms.Application do
       {Phoenix.PubSub, name: PhoenixPhantoms.PubSub},
       # Start Finch
       {Finch, name: PhoenixPhantoms.Finch},
+      # Presence
+      PhoenixPhantomsWeb.Presence,
       # Start the Endpoint (http/https)
       PhoenixPhantomsWeb.Endpoint
       # Start a worker by calling: PhoenixPhantoms.Worker.start_link(arg)

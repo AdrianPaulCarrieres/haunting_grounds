@@ -35,7 +35,8 @@ defmodule PhoenixPhantomsWeb.SpookyComponents do
   def ghost(assigns) do
     ~H"""
     <img
-      phx-click={@on_click} phx-value-id={@id}
+      phx-click={@on_click}
+      phx-value-id={@id}
       class="fixed z-50 opacity-25 w-20 animate-[ghost_1s_ease-in-out_infinite]"
       src={~c"images/ghost.png"}
       style={"left: #{@x}px; top: #{@y}px; animation-duration: #{@float_speed}s";}
