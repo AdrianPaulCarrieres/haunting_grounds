@@ -4,10 +4,15 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
   """
   @behaviour ECSx.System
 
+  alias PhoenixPhantoms.Components.PlayerColor
+  alias PhoenixPhantoms.Components.PlayerName
+  alias PhoenixPhantoms.Components.AttackedBy
   alias PhoenixPhantoms.Components
   alias Components.AttackCooldown
+  alias Components.KilledBy
   alias Components.HealthPoints
   alias Components.AttackSpeed
+  alias Components.Score
 
   @impl ECSx.System
   def run do
@@ -16,7 +21,11 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
     Enum.each(client_events, &process_one/1)
   end
 
-  defp process_one({player, :spawn_player}) do
+  defp process_one({player, {:spawn_player, name, color}}) do
+    Score.add(player, 0)
+    PlayerName.add(player, name)
+    PlayerColor.add(player, color)
+
     AttackSpeed.add(player, 1.2)
   end
 
@@ -24,18 +33,25 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
     if AttackCooldown.exists?(player) do
       nil
     else
-      deal_damage(ghost)
+      deal_damage(ghost, player)
       add_cooldown(player)
     end
   end
 
-  defp deal_damage(target) do
-    case HealthPoints.get(target, :already_dead) do
+  defp deal_damage(ghost, player) do
+    case HealthPoints.get(ghost, :already_dead) do
       :already_dead ->
         :ok
 
-      hp ->
-        HealthPoints.update(target, hp - 1)
+
+      # TODO: FIX THIS
+      hp when hp - 1 >= 1 ->
+        AttackedBy.add(ghost, player)
+        HealthPoints.update(ghost, hp - 1)
+
+      hp when hp <= 1 ->
+        KilledBy.add(ghost, player)
+        HealthPoints.update(ghost, 0)
     end
   end
 

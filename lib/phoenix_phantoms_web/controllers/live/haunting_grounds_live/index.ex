@@ -1,4 +1,6 @@
 defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
+  alias PhoenixPhantoms.Components.PlayerName
+  alias PhoenixPhantoms.Components.PlayerColor
   use PhoenixPhantomsWeb, :live_view
 
   import PhoenixPhantomsWeb.SpookyComponents
@@ -7,6 +9,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   alias Components.HealthPoints
   alias Components.XPosition
   alias Components.YPosition
+  alias Components.Score
 
   alias PhoenixPhantoms.PubSub
   alias PhoenixPhantomsWeb.Presence
@@ -26,9 +29,14 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
 
     socket =
       if connected?(socket) do
-        ECSx.ClientEvents.add(player_id, :spawn_player)
+        {name, color} = player_identity()
+        ECSx.ClientEvents.add(player_id, {:spawn_player, name, color})
+
         send(self(), :first_load)
-        join_presence(socket)
+
+        socket
+        |> assign(:name, name)
+        |> assign(:color, color)
       else
         socket
       end
@@ -38,7 +46,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
 
   defp assign_loading_state(socket) do
     assign(socket,
-      loading: true
+      loading: true,
+      scores: []
     )
   end
 
@@ -46,7 +55,9 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   def handle_info(:first_load, socket) do
     socket =
       socket
+      |> join_presence()
       |> assign_ghosts()
+      |> assign_scores()
       |> assign(loading: false)
 
     :timer.send_interval(50, :refresh)
@@ -59,6 +70,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     socket =
       socket
       |> assign_ghosts()
+      |> assign_scores()
 
     {:noreply, socket}
   end
@@ -113,8 +125,24 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     end
   end
 
+  defp assign_scores(socket) do
+    scores =
+      Score.get_all()
+      |> Enum.sort_by(fn {_p, s} -> s end, :desc)
+      |> Enum.map(fn {entity, score} ->
+        player_name = PlayerName.get(entity)
+        player_color = PlayerColor.get(entity)
+
+        {player_name, player_color, score}
+      end)
+
+    assign(socket, :scores, scores)
+  end
+
   defp join_presence(socket) do
-    {name, color} = player_identity()
+    player_entity = socket.assigns.player_entity
+    name = socket.assigns.name
+    color = socket.assigns.color
 
     {:ok, _} =
       Presence.track(self(), @presence, socket.id, %{
@@ -123,7 +151,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
         y: 50,
         name: name,
         color: color,
-        id: socket.id
+        id: socket.id,
+        player_entity: player_entity
       })
 
     Phoenix.PubSub.subscribe(PubSub, @presence)
@@ -133,7 +162,6 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
       |> Enum.map(fn {_, data} -> data[:metas] |> List.first() end)
 
     socket
-    |> assign(:color, color)
     |> assign(:users, initial_users)
     |> assign(:x, 50)
     |> assign(:y, 50)
