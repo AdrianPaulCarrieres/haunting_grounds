@@ -24,6 +24,7 @@ defmodule PhoenixPhantoms.Systems.Destruction do
       if hp <= 0 do
         destroy(ghost)
         award_points(ghost)
+        DestroyedAt.add(ghost, DateTime.utc_now())
       end
     end)
   end
@@ -33,9 +34,7 @@ defmodule PhoenixPhantoms.Systems.Destruction do
     XPosition.remove(ghost)
     XVelocity.remove(ghost)
     YPosition.remove(ghost)
-    YVelocity.remove(ghost)
-
-    DestroyedAt.add(ghost, DateTime.utc_now())
+    YVelocity.remove(ghost)    
   end
 
   defp award_points(ghost) do

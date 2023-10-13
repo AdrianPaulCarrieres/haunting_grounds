@@ -43,7 +43,6 @@ defmodule PhoenixPhantoms.Systems.ClientEventHandler do
       :already_dead ->
         :ok
 
-
       # TODO: FIX THIS
       hp when hp - 1 >= 1 ->
         AttackedBy.add(ghost, player)
