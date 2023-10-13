@@ -4,15 +4,7 @@ defmodule PhoenixPhantoms.Manager do
   """
   use ECSx.Manager
 
-  alias PhoenixPhantoms.Components
-
-  alias Components.XPosition
-  alias Components.YPosition
-
-  alias Components.XVelocity
-  alias Components.YVelocity
-
-  alias Components.HealthPoints
+  alias PhoenixPhantoms.Spawner
 
   def setup do
     # Seed persistent components only for the first server start
@@ -23,19 +15,7 @@ defmodule PhoenixPhantoms.Manager do
   def startup do
     # Load ephemeral components during first server start and again
     # on every subsequent app restart
-    for _ghosts <- 1..10 do
-      # First generate a unique ID to represent the new entity
-      entity = Ecto.UUID.generate()
-
-      # Then use that ID to create the components which make up a ghost
-      XPosition.add(entity, Enum.random(0..1000))
-      YPosition.add(entity, Enum.random(0..1000))
-
-      XVelocity.add(entity, 1)
-      YVelocity.add(entity, 1)
-
-      HealthPoints.add(entity, 1)
-    end
+    Spawner.spawn_many(10)
   end
 
   # Declare all valid Component types
@@ -60,6 +40,7 @@ defmodule PhoenixPhantoms.Manager do
   # Declare all Systems to run
   def systems do
     [
+      PhoenixPhantoms.Systems.Revenance,
       PhoenixPhantoms.Systems.ClientEventHandler,
       PhoenixPhantoms.Systems.Destruction,
       PhoenixPhantoms.Systems.CooldownExpiration,
