@@ -24,8 +24,8 @@ defmodule PhoenixPhantoms.Spawner do
     XPosition.add(entity, Enum.random(0..1000))
     YPosition.add(entity, Enum.random(0..1000))
 
-    XVelocity.add(entity, Enum.random(-2..2))
-    YVelocity.add(entity, Enum.random(-2..2))
+    XVelocity.add(entity, Enum.random(-5..5))
+    YVelocity.add(entity, Enum.random(-5..5))
 
     HealthPoints.add(entity, 1)
   end

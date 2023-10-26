@@ -15,7 +15,7 @@ defmodule PhoenixPhantoms.Manager do
   def startup do
     # Load ephemeral components during first server start and again
     # on every subsequent app restart
-    Spawner.spawn_many(10)
+    Spawner.spawn_many(20)
   end
 
   # Declare all valid Component types
