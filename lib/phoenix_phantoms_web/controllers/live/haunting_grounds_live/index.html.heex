@@ -1,8 +1,11 @@
-<div class="screen flex flex-row">
+<div class="screen flex flex-row bg-gradient-radial from-slate-300 to-slate-950 z-50">
   <div class="contour-left w-1/12 bg-zinc-500 z-10"></div>
   <div class="left-part w-8/12 flex flex-col">
     <div class="contour-top bg-zinc-500 h-1/6 z-50"></div>
-    <div class="game h-4/6">
+    <div
+      class="game h-4/6"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+    >
       <div id="div" class="cursor-crosshair">
         <%= if @loading do %>
           Loading...
