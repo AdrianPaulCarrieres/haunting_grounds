@@ -49,7 +49,10 @@
     </div>
   </div>
   <div class="right-part w-3/12 flex flex-col min-h-screen bg-zinc-500">
-    <div class="online-players-count h-1/6 flex flex-col mx-6 py-16 my-4 bg-zinc-400 rounded-lg">
+    <div
+      class="online-players-count h-1/6 flex flex-col mx-6 py-16 my-4 bg-zinc-400 rounded-lg"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+    >
       <label for="hunters" class="mx-auto">Hunters online:</label>
       <div class="mx-auto">
         0
@@ -70,7 +73,10 @@
         <%= Enum.count(@users) %>
       </div>
     </div>
-    <div class="buttons mx-auto h-3/6 flex flex-row bg-green-500">
+    <div
+      class="buttons h-3/6 flex flex-row mx-6 px-4 bg-zinc-400 rounded-lg space-x-3"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+    >
       <div class="big-buttons flex flex-col my-auto space-y-4">
         <div class="credits rounded-full bg-slate-500 mx-auto p-14">
           How
