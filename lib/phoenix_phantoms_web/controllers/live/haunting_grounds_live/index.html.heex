@@ -1,55 +1,57 @@
 Hello there
-<div id="div" class="cursor-crosshair">
-  <%= if @loading do %>
-    Loading...
-  <% else %>
-    <div id="scores">
-      Scores: <br />
-      <ul>
-        <%= for {name, color, score} <- @scores, score != 0 do %>
-          <li>
-            <span style={"background-color: #{color};"} class="ml-1 text-sm text-white">
+<div id="game" class="bg-slate-600">
+  <div id="div" class="cursor-crosshair">
+    <%= if @loading do %>
+      Loading...
+    <% else %>
+      <div id="scores">
+        Scores: <br />
+        <ul>
+          <%= for {name, color, score} <- @scores, score != 0 do %>
+            <li>
+              <span style={"background-color: #{color};"} class="ml-1 text-sm text-white">
           <%= name %>
           </span>: <%= score %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div id="ghosts" phx-hook="">
+        <%= for {g, x, y} <- @ghosts do %>
+          <.ghost on_click="ghost_click" id={g} x={x} y={y} float_speed={1} />
+        <% end %>
+      </div>
+      <ul class="list-none" id="cursors" phx-hook="TrackClientCursor">
+        <%= for user <- @users do %>
+          <li
+            style={"color: #{user.color}; top: 0px; left: 0px; transform: translate(#{user.x}px, #{user.y}px)"}
+            class="flex flex-col absolute pointer-events-none whitespace-nowrap overflow-hidden"
+          >
+            <%= if user.id != @socket.id do %>
+              <svg
+                version="1.1"
+                width="25px"
+                height="25px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 21 21"
+              >
+                <polygon fill="black" points="8.2,20.9 8.2,4.9 19.8,16.5 13,16.5 12.6,16.6" />
+                <polygon
+                  fill="currentColor"
+                  points="9.2,7.3 9.2,18.5 12.2,15.6 12.6,15.5 17.4,15.5"
+                />
+              </svg>
+            <% end %>
+            <span
+              style={"background-color: #{user.color};"}
+              class="mt-1 ml-3 px-1 text-sm text-white"
+            >
+              <%= user.name %>
+            </span>
           </li>
         <% end %>
       </ul>
-    </div>
-    <div id="ghosts" phx-hook="">
-      <%= for {g, x, y} <- @ghosts do %>
-        <.ghost on_click="ghost_click" id={g} x={x} y={y} float_speed={1} />
-      <% end %>
-    </div>
-    <ul class="list-none" id="cursors" phx-hook="TrackClientCursor">
-      <%= for user <- @users do %>
-        <li
-          style={"color: #{user.color}; top: 0px; left: 0px; transform: translate(#{user.x}px, #{user.y}px)"}
-          class="flex flex-col absolute pointer-events-none whitespace-nowrap overflow-hidden"
-        >
-          <%= if user.id != @socket.id do %>
-            <svg
-              version="1.1"
-              width="25px"
-              height="25px"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              viewBox="0 0 21 21"
-            >
-              <polygon fill="black" points="8.2,20.9 8.2,4.9 19.8,16.5 13,16.5 12.6,16.6" />
-              <polygon
-                fill="currentColor"
-                points="9.2,7.3 9.2,18.5 12.2,15.6 12.6,15.5 17.4,15.5"
-              />
-            </svg>
-          <% end %>
-          <span
-            style={"background-color: #{user.color};"}
-            class="mt-1 ml-3 px-1 text-sm text-white"
-          >
-            <%= user.name %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
+    <% end %>
+  </div>
 </div>
