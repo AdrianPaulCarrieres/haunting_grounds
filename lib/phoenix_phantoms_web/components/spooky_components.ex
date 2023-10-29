@@ -37,7 +37,7 @@ defmodule PhoenixPhantomsWeb.SpookyComponents do
     <img
       phx-click={@on_click}
       phx-value-id={@id}
-      class="fixed z-50 opacity-25 w-20 animate-[ghost_1s_ease-in-out_infinite]"
+      class="fixed z-0 opacity-25 w-20 animate-[ghost_1s_ease-in-out_infinite]"
       src={~c"images/ghost.png"}
       style={"left: #{@x}px; top: #{@y}px; animation-duration: #{@float_speed}s";}
     />

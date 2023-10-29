@@ -48,7 +48,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     assign(socket,
       loading: true,
       scores: [],
-      users: []
+      users: [],
+      ghosts: []
     )
   end
 
