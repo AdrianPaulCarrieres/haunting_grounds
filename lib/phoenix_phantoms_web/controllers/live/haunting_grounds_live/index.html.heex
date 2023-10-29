@@ -48,8 +48,8 @@
       </div>
     </div>
   </div>
-  <div class="right-part w-2/12 flex-none">
-    <div class="online-players-count h-2/6 flex flex-col mx-auto">
+  <div class="right-part w-2/12 flex flex-col min-h-screen bg-blue-400">
+    <div class="online-players-count h-1/6 flex flex-col mx-auto bg-yellow-300">
       <label for="hunters" class="mx-auto">Hunters online:</label>
       <div class="mx-auto">
         0
@@ -70,18 +70,22 @@
         <%= Enum.count(@users) %>
       </div>
     </div>
-    <div class="buttons mx-auto h-2/6">
-      <div class="big-buttons">
-        <div>
-          HOW/CREDITS
+    <div class="buttons mx-auto h-3/6 flex flex-row bg-green-500">
+      <div class="big-buttons flex flex-col my-auto space-y-4">
+        <div class="credits rounded-full bg-slate-500 mx-auto p-14">
+          How
         </div>
-        <div>
+        <div class="link-to-me rounded-full bg-slate-500 mx-auto p-14">
           ME
         </div>
       </div>
-      <div class="small-buttons"></div>
+      <div class="small-buttons space-y-2 my-auto">
+        <div class="s-button rounded-full bg-slate-500 p-4 w-1"></div>
+        <div class="s-button rounded-full bg-slate-500 p-4 w-1"></div>
+        <div class="s-button rounded-full bg-slate-500 p-4 w-1"></div>
+      </div>
     </div>
-    <div id="scores" class="mx-auto h-2/6">
+    <div id="scores" class="h-2/6 mx-auto bg-red-400">
       <p class="mx-auto">
         Scores:
       </p>
