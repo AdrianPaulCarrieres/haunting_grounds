@@ -47,7 +47,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   defp assign_loading_state(socket) do
     assign(socket,
       loading: true,
-      scores: []
+      scores: [],
+      users: []
     )
   end
 
@@ -133,7 +134,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
         player_name = PlayerName.get(entity)
         player_color = PlayerColor.get(entity)
 
-        {player_name, player_color, score}
+        {entity, player_name, player_color, score}
       end)
 
     assign(socket, :scores, scores)
