@@ -23,7 +23,7 @@ defmodule PhoenixPhantoms.Systems.Driver do
     # Once the x-values are updated, do the same for the y-values
     for {entity, y_velocity} <- YVelocity.get_all() do
       y_position = YPosition.get(entity)
-      new_y_position = rem(y_position + y_velocity + 900, 900)
+      new_y_position = rem(y_position + y_velocity + 1000, 1000)
       YPosition.update(entity, new_y_position)
     end
   end

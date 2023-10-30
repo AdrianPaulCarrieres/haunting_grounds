@@ -29,11 +29,11 @@ defmodule PhoenixPhantoms.Spawner do
     entity = Ecto.UUID.generate()
 
     # Then use that ID to create the components which make up a ghost
-    XPosition.add(entity, Enum.random(300..1500))
-    YPosition.add(entity, Enum.random(300..1000))
+    XPosition.add(entity, Enum.random(0..1500))
+    YPosition.add(entity, Enum.random(0..900))
 
-    XVelocity.add(entity, Enum.random(-5..5))
-    YVelocity.add(entity, Enum.random(-5..5))
+    XVelocity.add(entity, Enum.random(-3..3))
+    YVelocity.add(entity, Enum.random(-3..3))
 
     image = Enum.random(@images)
 
