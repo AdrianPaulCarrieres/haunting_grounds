@@ -5,16 +5,16 @@
       <h1 class="flex-grow min-h-full text-8xl my-8 mx-20 font-mono">Haunting Grounds</h1>
     </div>
     <div
-      class="game h-4/6 bg-gradient-radial from-white to-zinc-400"
-      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+      class="game h-4/6 bg-gradient-radial from-white to-zinc-400 bg-center"
+      style={"box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; background-image: url(#{~c"images/sky.png"})"}
     >
       <div id="div" class="cursor-crosshair">
         <%= if @loading do %>
           Loading...
         <% else %>
           <div id="ghosts" phx-hook="">
-            <%= for {g, x, y} <- @ghosts do %>
-              <.ghost on_click="ghost_click" id={g} x={x} y={y} float_speed={1} />
+            <%= for {g, x, y, img} <- @ghosts do %>
+              <.ghost on_click="ghost_click" id={g} x={x} y={y} image={img} float_speed={1} />
             <% end %>
           </div>
           <ul class="list-none" id="cursors" phx-hook="TrackClientCursor">

@@ -13,6 +13,10 @@ defmodule PhoenixPhantoms.Spawner do
 
   alias Components.HealthPoints
 
+  alias Components.ImageFile
+
+  @images ["images/ghost_skull_Fusionnes.png", "images/ghost_grave_Fusionnes.png", "images/small_skull_Fusionnes.png"]
+
   def spawn_many(n) do
     Enum.each(0..n, fn _ -> spawn_one() end)
   end
@@ -26,6 +30,10 @@ defmodule PhoenixPhantoms.Spawner do
 
     XVelocity.add(entity, Enum.random(-5..5))
     YVelocity.add(entity, Enum.random(-5..5))
+
+    image = Enum.random(@images)
+
+    ImageFile.add(entity, image)
 
     HealthPoints.add(entity, 1)
   end

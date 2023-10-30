@@ -11,6 +11,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   alias Components.YPosition
   alias Components.Score
 
+  alias Components.ImageFile
+
   alias PhoenixPhantoms.PubSub
   alias PhoenixPhantomsWeb.Presence
 
@@ -123,7 +125,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     for {ghost, _hp} <- HealthPoints.get_all() do
       x = XPosition.get(ghost)
       y = YPosition.get(ghost)
-      {ghost, x, y}
+      img = ImageFile.get(ghost)
+      {ghost, x, y, img}
     end
   end
 
