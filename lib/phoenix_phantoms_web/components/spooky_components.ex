@@ -41,6 +41,7 @@ defmodule PhoenixPhantomsWeb.SpookyComponents do
       class="fixed z-0 opacity-75 w-20 animate-[ghost_1s_ease-in-out_infinite]"
       src={~c"#{@image}"}
       style={"left: #{@x}px; top: #{@y}px; animation-duration: #{@float_speed}s";}
+      draggable="false"
     />
     """
   end

@@ -15,7 +15,11 @@ defmodule PhoenixPhantoms.Spawner do
 
   alias Components.ImageFile
 
-  @images ["images/ghost_skull_Fusionnes.png", "images/ghost_grave_Fusionnes.png", "images/small_skull_Fusionnes.png"]
+  @images [
+    "images/ghost_skull_Fusionnes.png",
+    "images/ghost_grave_Fusionnes.png",
+    "images/small_skull_Fusionnes.png"
+  ]
 
   def spawn_many(n) do
     Enum.each(0..n, fn _ -> spawn_one() end)

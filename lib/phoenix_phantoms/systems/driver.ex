@@ -16,7 +16,7 @@ defmodule PhoenixPhantoms.Systems.Driver do
   def run do
     for {entity, x_velocity} <- XVelocity.get_all() do
       x_position = XPosition.get(entity)
-      new_x_position = rem(x_position + x_velocity + 1250, 1250)
+      new_x_position = rem(x_position + x_velocity + 1750, 1750)
       XPosition.update(entity, new_x_position)
     end
 
