@@ -57,6 +57,9 @@ defmodule PhoenixPhantoms.MixProject do
       # Linter
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
 
+      # Clustering
+      {:dns_cluster, "~> 0.1.1"},
+
       # Reporting
       {:sentry, "~> 8.0"},
       {:hackney, "~> 1.8"}

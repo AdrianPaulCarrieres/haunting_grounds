@@ -11,13 +11,15 @@ defmodule PhoenixPhantoms.Application do
       # Start the Telemetry supervisor
       PhoenixPhantomsWeb.Telemetry,
       # Start the Ecto repository
-      PhoenixPhantoms.Repo,
+      #PhoenixPhantoms.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: PhoenixPhantoms.PubSub},
       # Start Finch
       {Finch, name: PhoenixPhantoms.Finch},
       # Presence
       PhoenixPhantomsWeb.Presence,
+      # Start clustering
+      {DNSCluster, query: Application.get_env(:phoenix_phantoms, :dns_cluster_query) || :ignore},
       # Start the Endpoint (http/https)
       PhoenixPhantomsWeb.Endpoint
       # Start a worker by calling: PhoenixPhantoms.Worker.start_link(arg)

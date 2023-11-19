@@ -34,7 +34,7 @@ defmodule PhoenixPhantoms.Systems.Destruction do
     XPosition.remove(ghost)
     XVelocity.remove(ghost)
     YPosition.remove(ghost)
-    YVelocity.remove(ghost)    
+    YVelocity.remove(ghost)
   end
 
   defp award_points(ghost) do
