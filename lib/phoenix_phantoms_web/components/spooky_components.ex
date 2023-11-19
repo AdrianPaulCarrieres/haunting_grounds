@@ -28,6 +28,7 @@ defmodule PhoenixPhantomsWeb.SpookyComponents do
 
   attr :on_click, :string, default: ""
   attr :id, :string, default: ""
+  attr :image, :string, default: "images/ghost_skull_Fusionnes.png"
 
   @doc """
   Renders a spooky ghost that floats on your screen.
@@ -37,9 +38,10 @@ defmodule PhoenixPhantomsWeb.SpookyComponents do
     <img
       phx-click={@on_click}
       phx-value-id={@id}
-      class="fixed z-50 opacity-25 w-20 animate-[ghost_1s_ease-in-out_infinite]"
-      src={~c"images/ghost.png"}
+      class="fixed z-0 opacity-75 w-20 animate-[ghost_1s_ease-in-out_infinite]"
+      src={~c"#{@image}"}
       style={"left: #{@x}px; top: #{@y}px; animation-duration: #{@float_speed}s";}
+      draggable="false"
     />
     """
   end
