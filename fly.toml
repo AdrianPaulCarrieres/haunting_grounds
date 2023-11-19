@@ -16,6 +16,7 @@ swap_size_mb = 512
 [env]
   PHX_HOST = "haunting-grounds.fly.dev"
   PORT = "8080"
+  DNS_CLUSTER_QUERY = "phoenix_phantoms.internal"
 
 [http_service]
   internal_port = 8080
