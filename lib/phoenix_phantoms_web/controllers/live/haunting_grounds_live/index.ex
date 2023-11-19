@@ -11,6 +11,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   alias Components.YPosition
   alias Components.Score
 
+  alias Components.ImageFile
+
   alias PhoenixPhantoms.PubSub
   alias PhoenixPhantomsWeb.Presence
 
@@ -47,7 +49,9 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
   defp assign_loading_state(socket) do
     assign(socket,
       loading: true,
-      scores: []
+      scores: [],
+      users: [],
+      ghosts: []
     )
   end
 
@@ -121,7 +125,8 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
     for {ghost, _hp} <- HealthPoints.get_all() do
       x = XPosition.get(ghost)
       y = YPosition.get(ghost)
-      {ghost, x, y}
+      img = ImageFile.get(ghost)
+      {ghost, x, y, img}
     end
   end
 
@@ -133,7 +138,7 @@ defmodule PhoenixPhantomsWeb.HauntingGroundsLive.Index do
         player_name = PlayerName.get(entity)
         player_color = PlayerColor.get(entity)
 
-        {player_name, player_color, score}
+        {entity, player_name, player_color, score}
       end)
 
     assign(socket, :scores, scores)

@@ -13,9 +13,10 @@ defmodule PhoenixPhantoms.Systems.Revenance do
   def run do
     destroyed_ghosts = DestroyedAt.get_all()
 
-    Enum.each(destroyed_ghosts, fn {id, _d} -> 
+    Enum.each(destroyed_ghosts, fn {id, _d} ->
       raise_dead(id, Enum.random([false, true]))
     end)
+
     :ok
   end
 

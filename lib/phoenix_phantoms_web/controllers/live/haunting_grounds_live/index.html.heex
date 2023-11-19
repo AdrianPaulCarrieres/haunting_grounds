@@ -1,55 +1,127 @@
-Hello there
-<div id="div" class="cursor-crosshair">
-  <%= if @loading do %>
-    Loading...
-  <% else %>
-    <div id="scores">
-      Scores: <br />
-      <ul>
-        <%= for {name, color, score} <- @scores, score != 0 do %>
+<div class="screen flex flex-grow flex-row z-50">
+  <div class="contour-left w-1/12 bg-zinc-500 z-10"></div>
+  <div class="left-part w-8/12 flex flex-col">
+    <div class="contour-top bg-zinc-500 h-1/6 z-50">
+      <h1 class="flex-grow min-h-full text-8xl my-8 mx-20 font-mono">Haunting Grounds</h1>
+    </div>
+    <div
+      class="game h-4/6 bg-gradient-radial from-white to-zinc-400 bg-center"
+      style={"box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; background-image: url(#{~c"images/sky.png"})"}
+    >
+      <div id="div" class="cursor-crosshair">
+        <%= if @loading do %>
+          Loading...
+        <% else %>
+          <div id="ghosts" phx-hook="">
+            <%= for {g, x, y, img} <- @ghosts do %>
+              <.ghost on_click="ghost_click" id={g} x={x} y={y} image={img} float_speed={1} />
+            <% end %>
+          </div>
+          <ul class="list-none" id="cursors" phx-hook="TrackClientCursor">
+            <%= for user <- @users do %>
+              <li
+                style={"color: #{user.color}; top: 0px; left: 0px; transform: translate(#{user.x}px, #{user.y}px)"}
+                class="flex flex-col absolute pointer-events-none whitespace-nowrap overflow-hidden"
+              >
+                <%= if user.id != @socket.id do %>
+                  <svg
+                    version="1.1"
+                    width="25px"
+                    height="25px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 21 21"
+                  >
+                    <polygon fill="black" points="8.2,20.9 8.2,4.9 19.8,16.5 13,16.5 12.6,16.6" />
+                    <polygon
+                      fill="currentColor"
+                      points="9.2,7.3 9.2,18.5 12.2,15.6 12.6,15.5 17.4,15.5"
+                    />
+                  </svg>
+                <% end %>
+                <span
+                  style={"background-color: #{user.color};"}
+                  class="mt-1 ml-3 px-1 text-sm text-white"
+                >
+                  <%= user.name %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+    <div class="contour-bottom bg-zinc-500 h-1/6 z-50"></div>
+  </div>
+  <div class="right-part w-3/12 flex flex-col min-h-screen bg-zinc-500 z-50">
+    <div
+      class="online-players-count h-1/6 flex flex-col mx-6 py-16 my-4 bg-zinc-400 rounded-lg"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+    >
+      <label for="hunters" class="mx-auto">Hunters online:</label>
+      <div class="mx-auto">
+        0
+        <meter
+          id="hunters"
+          min="0"
+          max="10"
+          low="1"
+          high="8"
+          optimum="5"
+          value={Enum.count(@users)}
+        >
+          <%= Enum.count(@users) %>
+        </meter>
+        10
+      </div>
+      <div class="mx-auto">
+        <%= Enum.count(@users) %>
+      </div>
+    </div>
+    <div
+      class="buttons h-3/6 mx-6 bg-zinc-400 rounded-lg"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+    >
+      <div class="space-x-3 flex flex-row justify-center my-24">
+        <div class="big-buttons flex flex-col my-auto space-y-4">
+          <div class="credits rounded-full bg-slate-500 mx-auto p-14 shadow-lg shadow-slate-700">
+            How
+          </div>
+          <div class="link-to-me rounded-full bg-slate-500 mx-auto p-14 shadow-lg shadow-slate-700">
+            Me
+          </div>
+        </div>
+        <div class="small-buttons space-y-2 my-auto">
+          <div class="s-button rounded-full bg-slate-500 p-4 w-1 shadow-lg shadow-slate-700">
+          </div>
+          <div class="s-button rounded-full bg-slate-500 p-4 w-1 shadow-lg shadow-slate-700">
+          </div>
+          <div class="s-button rounded-full bg-slate-500 p-4 w-1 shadow-lg shadow-slate-700">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="scores"
+      class="h-2/6 mx-6 px-4 my-4 py-3 bg-zinc-400 rounded-lg"
+      style="box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;"
+    >
+      <p class="mx-auto">
+        Scores:
+      </p>
+      <ul class="mx-auto">
+        <%= for {entity, name, color, score} <- @scores, score != 0 do %>
           <li>
             <span style={"background-color: #{color};"} class="ml-1 text-sm text-white">
-          <%= name %>
+            <%= if entity == @player_entity || false do %>
+            <%= "#{name} (You)" %>
+            <% else %>
+            <%= name %>
+            <% end %>
           </span>: <%= score %>
           </li>
         <% end %>
       </ul>
     </div>
-    <div id="ghosts" phx-hook="">
-      <%= for {g, x, y} <- @ghosts do %>
-        <.ghost on_click="ghost_click" id={g} x={x} y={y} float_speed={1} />
-      <% end %>
-    </div>
-    <ul class="list-none" id="cursors" phx-hook="TrackClientCursor">
-      <%= for user <- @users do %>
-        <li
-          style={"color: #{user.color}; top: 0px; left: 0px; transform: translate(#{user.x}px, #{user.y}px)"}
-          class="flex flex-col absolute pointer-events-none whitespace-nowrap overflow-hidden"
-        >
-          <%= if user.id != @socket.id do %>
-            <svg
-              version="1.1"
-              width="25px"
-              height="25px"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              viewBox="0 0 21 21"
-            >
-              <polygon fill="black" points="8.2,20.9 8.2,4.9 19.8,16.5 13,16.5 12.6,16.6" />
-              <polygon
-                fill="currentColor"
-                points="9.2,7.3 9.2,18.5 12.2,15.6 12.6,15.5 17.4,15.5"
-              />
-            </svg>
-          <% end %>
-          <span
-            style={"background-color: #{user.color};"}
-            class="mt-1 ml-3 px-1 text-sm text-white"
-          >
-            <%= user.name %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
+  </div>
 </div>
